@@ -15,6 +15,26 @@ provider "yandex" {
   zone = "ru-central1-a"
 }
 
-resource "yandex_compute_instance" "vm-1" {
-  name = "terraform1"
+resource "yandex_compute_instance" "test_vm" {
+  name = "tf_test"
+
+  resources {
+    cores  = 2
+    memory = 2
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = "fd82vo177212nq9p12pb"
+    }
+  }
+
+  network_interface {
+    subnet_id = subnet_id
+    nat       = true
+  }
+
+  metadata = {
+    ssh-keys = "debian10:${file("~/.ssh/id_rsa.pub")}"
+  }
 }
