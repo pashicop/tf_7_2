@@ -1,24 +1,3 @@
-terraform {
-  required_providers {
-    yandex = {
-      source = "yandex-cloud/yandex"
-    }
-  }
-  required_version = ">= 0.13"
-}
-
-variable "YC_TOKEN" {
-  default = ""
-}
-
-variable "YC_CLOUD_ID" {
-  default = ""
-}
-
-variable "YC_FOLDER_ID" {
-  default = ""
-}
-
 provider "yandex" {
   token = var.YC_TOKEN
   #  service_account_key_file = "path_to_service_account_key_file"
