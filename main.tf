@@ -7,16 +7,28 @@ terraform {
   required_version = ">= 0.13"
 }
 
-provider "yandex" {
-  token                    = YC_TOKEN
-#  service_account_key_file = "path_to_service_account_key_file"
-  cloud_id                 = YC_CLOUD
-  folder_id                = YC_FOLDER
-  zone = "ru-central1-a"
+variable "YC_TOKEN" {
+  default = ""
 }
 
-resource "yandex_compute_instance" "test_vm" {
-  name = "tf_test"
+variable "YC_CLOUD_ID" {
+  default = ""
+}
+
+variable "YC_FOLDER_ID" {
+  default = ""
+}
+
+provider "yandex" {
+  token = var.YC_TOKEN
+  #  service_account_key_file = "path_to_service_account_key_file"
+  cloud_id  = var.YC_CLOUD_ID
+  folder_id = var.YC_FOLDER_ID
+  zone      = "ru-central1-a"
+}
+
+resource "yandex_compute_instance" "vm-1" {
+  name = "tftest"
 
   resources {
     cores  = 2
@@ -25,7 +37,7 @@ resource "yandex_compute_instance" "test_vm" {
 
   boot_disk {
     initialize_params {
-      image_id = "fd82vo177212nq9p12pb"
+      image_id = "fd82vol772l2nq9p12pb"
     }
   }
 
@@ -35,7 +47,7 @@ resource "yandex_compute_instance" "test_vm" {
   }
 
   metadata = {
-    ssh-keys = "debian10:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "debian:${file("~/.ssh/id_rsa.pub")}"
   }
 }
 
@@ -51,10 +63,10 @@ resource "yandex_vpc_subnet" "subnet-1" {
 }
 
 output "internal_ip_address_vm_1" {
-  value = yandex_compute_instance.test_vm.network_interface.0.ip_address
+  value = yandex_compute_instance.vm-1.network_interface.0.ip_address
 }
 
 
 output "external_ip_address_vm_1" {
-  value = yandex_compute_instance.test_vm.network_interface.0.nat_ip_address
+  value = yandex_compute_instance.vm-1.network_interface.0.nat_ip_address
 }
